@@ -485,6 +485,7 @@ async def scrape_ambitionbox(
                 "--disable-blink-features=AutomationControlled",
                 "--no-sandbox",
                 "--disable-setuid-sandbox",
+                "--disable-http2",
             ],
         )
 
@@ -496,6 +497,8 @@ async def scrape_ambitionbox(
                     viewport={"width": 1920, "height": 1080},
                     locale="en-IN",
                     timezone_id="Asia/Kolkata",
+                    ignore_https_errors=True,
+                    bypass_csp=True,
                     extra_http_headers={
                         "Accept-Language": "en-IN,en;q=0.9",
                         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
