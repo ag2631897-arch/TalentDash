@@ -11,6 +11,11 @@ export default function HomePage() {
     <>
       {/* ── Hero Section ───────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden bg-transparent">
+        {/* OpenAI Codex Animated Background */}
+        <div className="absolute inset-0 -z-10 opacity-70">
+          <CodexAnimatedBackground />
+        </div>
+        
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
           <div className="mx-auto max-w-3xl text-center">
             <LiveRecordBadge />
