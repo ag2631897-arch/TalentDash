@@ -1,0 +1,14 @@
+services:
+  # Python AI Pipeline Background Worker
+  - type: worker
+    name: talentdash-pipeline
+    env: docker
+    dockerfilePath: ./Dockerfile.pipeline
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: TALENTDASH_API_URL
+        # Set this to your deployed Vercel URL (e.g. https://talentdash.vercel.app)
+        sync: false
+      - key: SCRAPE_INTERVAL_SECONDS
+        value: 21600
