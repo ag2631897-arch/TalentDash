@@ -242,18 +242,37 @@ def main():
         logger.info("Starting pipeline in SINGLE-RUN mode")
         asyncio.run(run_pipeline(dry_run=dry_run))
     else:
-        # Default to continuous mode
-        interval = int(os.environ.get("SCRAPE_INTERVAL_SECONDS", 21600))
-        logger.info(f"Starting pipeline in CONTINUOUS mode (running every {interval} seconds)")
-        while True:
-            try:
-                asyncio.run(run_pipeline(dry_run=dry_run))
-            except Exception as e:
-                logger.error(f"Pipeline run failed: {e}")
+        # Import web server dependencies here so they are only required for continuous mode
+        import uvicorn
+        from fastapi import FastAPI
+        
+        app = FastAPI(title="TalentDash Pipeline Worker")
+        
+        @app.get("/")
+        @app.get("/health")
+        def health_check():
+            return {"status": "healthy", "service": "talentdash-pipeline"}
             
-            logger.info(f"Sleeping for {interval} seconds before next run...")
-            import time
-            time.sleep(interval)
+        @app.on_event("startup")
+        async def startup_event():
+            # Start the scraping loop in the background
+            asyncio.create_task(continuous_scraper_loop(dry_run))
+            
+        async def continuous_scraper_loop(is_dry_run):
+            interval = int(os.environ.get("SCRAPE_INTERVAL_SECONDS", 21600))
+            logger.info(f"Starting pipeline in CONTINUOUS mode (running every {interval} seconds)")
+            while True:
+                try:
+                    await run_pipeline(dry_run=is_dry_run)
+                except Exception as e:
+                    logger.error(f"Pipeline run failed: {e}")
+                
+                logger.info(f"Sleeping for {interval} seconds before next run...")
+                await asyncio.sleep(interval)
+                
+        port = int(os.environ.get("PORT", 8080))
+        logger.info(f"Starting web server on port {port} to satisfy Render health checks")
+        uvicorn.run(app, host="0.0.0.0", port=port)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 services:
-  # Python AI Pipeline Background Worker
-  - type: worker
+  # Python AI Pipeline Background Worker (running as a web service for free tier)
+  - type: web
     name: talentdash-pipeline
     env: docker
     dockerfilePath: ./Dockerfile
