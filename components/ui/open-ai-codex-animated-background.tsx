@@ -8,7 +8,7 @@ export const CodexAnimatedBackground = () => {
     <div className={cn("absolute inset-0 z-0 overflow-hidden pointer-events-none")}>
       <Script 
         src="https://cdn.unicorn.studio/v1.3.2/unicornStudio.umd.js" 
-        strategy="lazyOnload" 
+        strategy="afterInteractive" 
         onLoad={() => {
           if (typeof window !== "undefined" && (window as any).UnicornStudio) {
             (window as any).UnicornStudio.init();
