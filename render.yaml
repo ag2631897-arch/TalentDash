@@ -3,7 +3,7 @@ services:
   - type: worker
     name: talentdash-pipeline
     env: docker
-    dockerfilePath: ./Dockerfile.pipeline
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: GROQ_API_KEY
         sync: false
